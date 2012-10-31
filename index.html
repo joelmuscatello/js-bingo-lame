@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Turkey Bingo</title>
+    <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="js/bingo.js"></script>
+    <link rel="stylesheet" media="all" type='text/css' href="css/bingo.css"/>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        var ballCallLength = 2000;
+        var $ballsTable = $('#ballsTbl');
+        var $ballsTbody = $('#ballsTbody');
+        var $selectedBallDiv = $('#selectedBallDiv');
+        var $selectedBall = $('#selectedBall');
+        var $calledNumbersContents = $('#calledNumbersContents');
+
+        $('tr', $ballsTbody).remove();
+        newGame();
+//        buildBalls($ballsTbody);
+        buildHorizontalBalls($ballsTbody);
+        $calledNumbersContents.children().remove();
+
+
+        $("#callBall").click(function(e) {
+            e.preventDefault();
+
+            var ballId = getNextBall();
+            $selectedBall.html(ballId);
+            $selectedBallDiv.show();
+            var $theBall = $('#' + ballId);
+            setTimeout(function() {
+                $selectedBallDiv.fadeOut('fast');
+                $theBall.removeClass("ballfree");
+                $theBall.addClass("ballused");
+                $calledNumbersContents.append($('<span>' + ballId +' </span>'));
+            }, ballCallLength);
+            return false;
+        });
+
+        $("#newGame").click(function(e) {
+            e.preventDefault();
+            if (confirm("Are you sure you would like to start a new game?")) {
+                $(".ballused").each(function(index, value) {
+                    $(this).removeClass("ballused");
+                    $(this).addClass("ballfree");
+                });
+                $calledNumbersContents.children().remove();
+                newGame();
+            }
+            return false;
+        });
+    });
+    </script>
+</head>
+<body>
+    <div id="header">
+        <!--<p id="title">Bingo </p><p id="gametype"></p>-->
+    </div>
+
+    <div id="content">
+
+        <table id="ballsTbl">
+            <thead>
+            <tr align="center">
+                <!--
+                <td>B</td>
+                <td>I</td>
+                <td>N</td>
+                <td>G</td>
+                <td>O</td>
+                -->
+            </tr>
+            </thead>
+            <tbody id="ballsTbody">
+
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+
+        <div id="calledNumbers">
+            Numbers called in order:
+            <div id="calledNumbersContents"></div>
+        </div>
+
+
+        <div id="actiondiv">
+            <button id="callBall" type="button">Draw next ball</button>
+
+            <button id="newGame" type="button">Begin new game</button>
+        </div>
+    </div>
+
+    <div id="footer">
+    </div>
+
+    <div id="selectedBallDiv" style="display:none">
+        <div id="selectedBallContents">
+            <div id="selectedBall" class="ballused"></div>
+        </div>
+    </div>
+</body>
+</html>
