@@ -19,21 +19,22 @@
         var $totals = $('#totals');
 
         $('tr', $ballsTbody).remove();
-        newGame();
+        var bingo = Bingo();
+        bingo.newGame();
 //        buildBalls($ballsTbody);
-        buildHorizontalBalls($ballsTbody);
+        bingo.buildHorizontalBalls($ballsTbody);
         $calledNumbersContents.children().remove();
         setTotalsInformation();
 
         function setTotalsInformation() {
-            $totals.html(getTotalGamesPlayed() + " games played with " + getTotalWinners() + " winners.");
+            $totals.html(bingo.getTotalGamesPlayed() + " games played with " + bingo.getTotalWinners() + " winners.");
         }
 
 
         $("#callBall").click(function(e) {
             e.preventDefault();
 
-            var ballId = getNextBall();
+            var ballId = bingo.getNextBall();
             $selectedBall.html(ballId);
             $selectedBallDiv.show();
             var $theBall = $('#' + ballId);
@@ -54,7 +55,7 @@
                     $(this).addClass("ballfree");
                 });
                 $calledNumbersContents.children().remove();
-                newGame();
+                bingo.newGame();
                 setTotalsInformation();
         }
             return false;
