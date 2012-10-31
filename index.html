@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Turkey Bingo</title>
+    <title>Bingo</title>
     <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="js/bingo.js"></script>
     <link rel="stylesheet" media="all" type='text/css' href="css/bingo.css"/>
@@ -16,12 +16,18 @@
         var $selectedBallDiv = $('#selectedBallDiv');
         var $selectedBall = $('#selectedBall');
         var $calledNumbersContents = $('#calledNumbersContents');
+        var $totals = $('#totals');
 
         $('tr', $ballsTbody).remove();
         newGame();
 //        buildBalls($ballsTbody);
         buildHorizontalBalls($ballsTbody);
         $calledNumbersContents.children().remove();
+        setTotalsInformation();
+
+        function setTotalsInformation() {
+            $totals.html(getTotalGamesPlayed() + " games played with " + getTotalWinners() + " winners.");
+        }
 
 
         $("#callBall").click(function(e) {
@@ -49,7 +55,8 @@
                 });
                 $calledNumbersContents.children().remove();
                 newGame();
-            }
+                setTotalsInformation();
+        }
             return false;
         });
     });
@@ -95,6 +102,9 @@
     </div>
 
     <div id="footer">
+        <div id="infoDiv">
+            <span id="totals"></span>
+        </div>
     </div>
 
     <div id="selectedBallDiv" style="display:none">
@@ -102,5 +112,7 @@
             <div id="selectedBall" class="ballused"></div>
         </div>
     </div>
+
+
 </body>
 </html>

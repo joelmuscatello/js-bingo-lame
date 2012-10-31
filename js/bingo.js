@@ -1,5 +1,7 @@
 
 var availableBalls;
+var totalGamesPlayed = -1;
+var totalWinners = -1;
 
 var fullBingoBalls = new Array(
     "B1",  "B2",  "B3",  "B4",   "B5", "B6",  "B7",  "B8",  "B9", "B10", "B11", "B12", "B13", "B14", "B15",
@@ -10,7 +12,17 @@ var fullBingoBalls = new Array(
 );
 function newGame() {
     availableBalls = fullBingoBalls.slice(0);
+    totalGamesPlayed++;
+    totalWinners++;
     return 1;
+}
+
+function getTotalGamesPlayed() {
+  return totalGamesPlayed;
+}
+
+function getTotalWinners() {
+  return totalWinners;
 }
 
 function buildBalls($tbody) {
@@ -21,12 +33,12 @@ function buildBalls($tbody) {
         var nBall = "N" + (i + 30);
         var gBall = "G" + (i + 45);
         var oBall = "O" + (i + 60);
-                // <td><div class="ballfree">B1</div></td>
-        var $bBall = $('<td><div id ="' + bBall + '" class="ballfree">' + bBall + '</div></td>');
-        var $iBall = $('<td><div id ="' + iBall + '" class="ballfree">' + iBall + '</div></td>');
-        var $nBall = $('<td><div id ="' + nBall + '" class="ballfree">' + nBall + '</div></td>');
-        var $gBall = $('<td><div id ="' + gBall + '" class="ballfree">' + gBall + '</div></td>');
-        var $oBall = $('<td><div id ="' + oBall + '" class="ballfree">' + oBall + '</div></td>');
+                // <td><div class="ball ballfree">B1</div></td>
+        var $bBall = $('<td><div id ="' + bBall + '" class="ball ballfree">' + bBall + '</div></td>');
+        var $iBall = $('<td><div id ="' + iBall + '" class="ball ballfree">' + iBall + '</div></td>');
+        var $nBall = $('<td><div id ="' + nBall + '" class="ball ballfree">' + nBall + '</div></td>');
+        var $gBall = $('<td><div id ="' + gBall + '" class="ball ballfree">' + gBall + '</div></td>');
+        var $oBall = $('<td><div id ="' + oBall + '" class="ball ballfree">' + oBall + '</div></td>');
         var $tr = $('<tr align="center"></tr>');
 
         $tr.append($bBall);
@@ -51,11 +63,11 @@ function buildHorizontalBalls($tbody) {
     var $gBalls = $('<tr></tr>');
     var $oBalls = $('<tr></tr>');
     for (var i = 1; i<= 15; i++) {
-        $bBalls.append($('<td><div id="B' + i + '" class="ballfree">B' + i + '</div></td>'));
-        $iBalls.append($('<td><div id="I' + (i + 15) + '" class="ballfree">I' + (i + 15) + '</div></td>'));
-        $nBalls.append($('<td><div id="N' + (i + 30) + '" class="ballfree">N' + (i + 30) + '</div></td>'));
-        $gBalls.append($('<td><div id="G' + (i + 45) + '" class="ballfree">G' + (i + 45) + '</div></td>'));
-        $oBalls.append($('<td><div id="O' + (i + 60) + '" class="ballfree">O' + (i + 60) + '</div></td>'));
+        $bBalls.append($('<td><div id="B' + i + '" class="ball ballfree">B' + i + '</div></td>'));
+        $iBalls.append($('<td><div id="I' + (i + 15) + '" class="ball ballfree">I' + (i + 15) + '</div></td>'));
+        $nBalls.append($('<td><div id="N' + (i + 30) + '" class="ball ballfree">N' + (i + 30) + '</div></td>'));
+        $gBalls.append($('<td><div id="G' + (i + 45) + '" class="ball ballfree">G' + (i + 45) + '</div></td>'));
+        $oBalls.append($('<td><div id="O' + (i + 60) + '" class="ball ballfree">O' + (i + 60) + '</div></td>'));
     }
 
     $tbody.append($bBalls);
