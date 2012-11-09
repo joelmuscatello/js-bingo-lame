@@ -12,16 +12,16 @@
 
     <script type="text/javascript">
     $(document).ready(function() {
-        $('#cboxClose').css({});
-
         var ballCallLength = 2000;
         var $ballsTable = $('#ballsTbl');
         var $ballsTbody = $('#ballsTbody');
         var $selectedBallDiv = $('#selectedBallDiv');
         var $selectedBall = $('#selectedBall');
         var $numberOfWinnersDiv = $('#numberOfWinnersDiv');
+        var $callBall = $('#callBall');
         var $numberOfWinners = $('#numberOfWinners');
         $numberOfWinners.numeric({ decimal : ",", negative: false });
+        var $colorbox = $('#colorbox');
 
         var $calledNumbersContents = $('#calledNumbersContents');
         var $totals = $('#totals');
@@ -29,60 +29,52 @@
         $('tr', $ballsTbody).remove();
         var bingo = Bingo();
         bingo.newGame();
-//        buildBalls($ballsTbody);
         bingo.buildHorizontalBalls($ballsTbody);
         $calledNumbersContents.children().remove();
         setTotalsInformation();
 
         function setTotalsInformation() {
-            <!--$totals.html(bingo.getTotalGamesPlayed() + " games played with " + bingo.getTotalWinners() + " winners.");-->
             $totals.html("Game: " + bingo.getCurrentGameNumber() + "&nbsp;&nbsp;&nbsp;Total Winners: " + bingo.getTotalWinners());
         }
 
 
-        $("#callBall").click(function(e) {
+        $callBall.click(handleCallBallClicked);
+
+        function handleCallBallClicked(e) {
             e.preventDefault();
 
             var ballId = bingo.getNextBall();
             if (typeof ballId !== 'undefined') {
                 $selectedBall.html(ballId);
                 var $theBall = $('#' + ballId);
+                $theBall.removeClass("ballfree");
+                $theBall.addClass("ballused");
+                $calledNumbersContents.append($('<span>' + ballId +' </span>'));
+
                 $.colorbox({href: '#selectedBallDiv',
                             inline: true,
+                            transition: 'elastic',
                             overlayClose: true,
-                            escKey: false,
-                            onComplete: function() {
-                                <!--$('.colorbox').css('background': 'none');-->
-                                $theBall.removeClass("ballfree");
-                                $theBall.addClass("ballused");
-                                $calledNumbersContents.append($('<span>' + ballId +' </span>'));
-                                <!--setTimeout(function() {-->
-                                    <!--$.colorbox.close();-->
-                                    <!--}, ballCallLength);-->
-                }});
-                <!--$selectedBallDiv.colorbox({href: '#selectedBallDiv', open: true, inline: true});-->
-                <!--$selectedBallDiv.show();-->
-                <!--setTimeout(function() {-->
-                    <!--$selectedBallDiv.fadeOut('fast');-->
-                    <!--$theBall.removeClass("ballfree");-->
-                    <!--$theBall.addClass("ballused");-->
-                    <!--$calledNumbersContents.append($('<span>' + ballId +' </span>'));-->
-                <!--}, ballCallLength);-->
+                            escKey: true
+                });
             }
+
             return false;
-        });
+        }
 
-        $("#newGame").click(function(e) {
+        $("#weHaveABingo").click(function(e) {
             e.preventDefault();
-            <!--if (confirm("Are you sure you would like to start a new game?")) {-->
-                $.colorbox({href: '#numberOfWinnersDiv',
-                inline: true,
-                overlayClose: false,
-                escKey: false});
-                <!--$numberOfWinnersDiv.show();-->
 
+            $.colorbox({href: '#numberOfWinnersDiv',
+                        inline: true,
+                        overlayClose: false,
+                        escKey: true,
+                        transition: 'elastic',
+                        onClosed: function() {
+                            $numberOfWinners.val(1);
+                        }
+            });
 
-            <!--}-->
             return false;
         });
 
@@ -109,7 +101,6 @@
         $('#numberOfWinnersCancel').click(function(e) {
             e.preventDefault();
             $.colorbox.close();
-            $numberOfWinners.val(1);
             return false;
         });
 
@@ -127,7 +118,6 @@
             var numberOfWinners = Math.max(1, $numberOfWinners.val());
             bingo.increaseWinners(numberOfWinners);
             setTotalsInformation();
-            $numberOfWinners.val(1);
         }
     });
     </script>
@@ -167,7 +157,7 @@
         <div id="actiondiv">
             <button id="callBall" type="button">Draw next ball</button>
 
-            <button id="newGame" type="button">We have a Bingo</button>
+            <button id="weHaveABingo" type="button">We have a Bingo</button>
         </div>
     </div>
 
@@ -191,7 +181,7 @@
                 <button id="numberOfWinnersSameCard" type="button">Continue Same Game</button>
                 <button id="numberOfWinnersNewGame" type="button">Start New Game</button>
                 <div>
-                    <button id="numberOfWinnersCancel" type="button">Cancel</button>
+                    <a id="numberOfWinnersCancel" href="#">Cancel</a>
                 </div>
             </div>
         </div>

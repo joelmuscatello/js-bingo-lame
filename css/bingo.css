@@ -4,6 +4,16 @@
     padding: 0;
 }
 
+/* disable text selection from everything */
+*:not([type=number]) {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 body {
     max-width: 1024px;
     margin: 0 auto;
@@ -12,7 +22,6 @@ body {
 input {
     font-size: 20px;
 }
-
 
 #title {
     color: #FFAB32;
@@ -102,7 +111,7 @@ button {
     margin-left: 20px;
 }
 
-#newGame {
+#weHaveABingo {
     float:right;
     margin-right: 20px;
 }
@@ -142,11 +151,10 @@ button {
     margin: 0 5px;
 }
 
-#numberOfWinnersButtons #numberOfWinnersCancel {
+a#numberOfWinnersCancel, a#numberOfWinnersCancel:hover, a#numberOfWinnersCancel:visited {
+    color: black;
+    font-size: 10px;
     margin: 20px 0 0 0;
-    float: none;
-    clear: both;
-    width: auto;
-    height: auto;
-    font-size: 8px;
+    text-decoration: none;
 }
+
