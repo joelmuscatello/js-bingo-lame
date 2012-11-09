@@ -27,7 +27,6 @@ var Bingo = function() {
     return {
         newGame : function() {
             availableBalls = fullBingoBalls.slice(0);
-            availableBalls = fourBalls.slice(0);
             currentGameNumber++;
             return 1;
         },
