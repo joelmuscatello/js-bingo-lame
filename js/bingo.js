@@ -1,7 +1,7 @@
 
 var Bingo = function() {
-    var totalGamesPlayed = -1;
-    var totalWinners = -1;
+    var currentGameNumber = 0;
+    var totalWinners = 0;
 
     var fullBingoBalls = new Array(
         "B1",  "B2",  "B3",  "B4",   "B5", "B6",  "B7",  "B8",  "B9", "B10", "B11", "B12", "B13", "B14", "B15",
@@ -19,19 +19,21 @@ var Bingo = function() {
         "O61", "O62", "O63", "O64", "O65", "O66", "O67", "O68", "O69", "O70", "O71", "O72", "O73", "O74", "O75"
     );
 
+    var fourBalls = new Array("B1", "I23", "N36", "G52");
+
 
     var availableBalls = fullBingoBalls.slice(0);
 
     return {
         newGame : function() {
             availableBalls = fullBingoBalls.slice(0);
-            totalGamesPlayed++;
-            totalWinners++;
+            availableBalls = fourBalls.slice(0);
+            currentGameNumber++;
             return 1;
         },
 
-        getTotalGamesPlayed : function() {
-          return totalGamesPlayed;
+        getCurrentGameNumber : function() {
+          return currentGameNumber;
         },
 
         getTotalWinners : function() {
@@ -100,6 +102,12 @@ var Bingo = function() {
             availableBalls.splice(index, 1);
 
             return ball;
+        },
+
+        increaseWinners : function(num) {
+            if (typeof(num) != 'undefined' && num > 0) {
+                totalWinners += num;
+            }
         }
     }
 }

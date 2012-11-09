@@ -4,17 +4,25 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Bingo</title>
     <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.colorbox-min.js"></script>
+    <script type="text/javascript" src="js/jquery.numeric.js"></script>
     <script type="text/javascript" src="js/bingo.js"></script>
     <link rel="stylesheet" media="all" type='text/css' href="css/bingo.css"/>
+    <link rel="stylesheet" media="all" type='text/css' href="css/colorbox.css"/>
 
     <script type="text/javascript">
     $(document).ready(function() {
+        $('#cboxClose').css({});
 
         var ballCallLength = 2000;
         var $ballsTable = $('#ballsTbl');
         var $ballsTbody = $('#ballsTbody');
         var $selectedBallDiv = $('#selectedBallDiv');
         var $selectedBall = $('#selectedBall');
+        var $numberOfWinnersDiv = $('#numberOfWinnersDiv');
+        var $numberOfWinners = $('#numberOfWinners');
+        $numberOfWinners.numeric({ decimal : ",", negative: false });
+
         var $calledNumbersContents = $('#calledNumbersContents');
         var $totals = $('#totals');
 
@@ -27,7 +35,8 @@
         setTotalsInformation();
 
         function setTotalsInformation() {
-            $totals.html(bingo.getTotalGamesPlayed() + " games played with " + bingo.getTotalWinners() + " winners.");
+            <!--$totals.html(bingo.getTotalGamesPlayed() + " games played with " + bingo.getTotalWinners() + " winners.");-->
+            $totals.html("Game: " + bingo.getCurrentGameNumber() + "&nbsp;&nbsp;&nbsp;Total Winners: " + bingo.getTotalWinners());
         }
 
 
@@ -35,31 +44,91 @@
             e.preventDefault();
 
             var ballId = bingo.getNextBall();
-            $selectedBall.html(ballId);
-            $selectedBallDiv.show();
-            var $theBall = $('#' + ballId);
-            setTimeout(function() {
-                $selectedBallDiv.fadeOut('fast');
-                $theBall.removeClass("ballfree");
-                $theBall.addClass("ballused");
-                $calledNumbersContents.append($('<span>' + ballId +' </span>'));
-            }, ballCallLength);
+            if (typeof ballId !== 'undefined') {
+                $selectedBall.html(ballId);
+                var $theBall = $('#' + ballId);
+                $.colorbox({href: '#selectedBallDiv',
+                            inline: true,
+                            overlayClose: true,
+                            escKey: false,
+                            onComplete: function() {
+                                <!--$('.colorbox').css('background': 'none');-->
+                                $theBall.removeClass("ballfree");
+                                $theBall.addClass("ballused");
+                                $calledNumbersContents.append($('<span>' + ballId +' </span>'));
+                                <!--setTimeout(function() {-->
+                                    <!--$.colorbox.close();-->
+                                    <!--}, ballCallLength);-->
+                }});
+                <!--$selectedBallDiv.colorbox({href: '#selectedBallDiv', open: true, inline: true});-->
+                <!--$selectedBallDiv.show();-->
+                <!--setTimeout(function() {-->
+                    <!--$selectedBallDiv.fadeOut('fast');-->
+                    <!--$theBall.removeClass("ballfree");-->
+                    <!--$theBall.addClass("ballused");-->
+                    <!--$calledNumbersContents.append($('<span>' + ballId +' </span>'));-->
+                <!--}, ballCallLength);-->
+            }
             return false;
         });
 
         $("#newGame").click(function(e) {
             e.preventDefault();
-            if (confirm("Are you sure you would like to start a new game?")) {
-                $(".ballused").each(function(index, value) {
-                    $(this).removeClass("ballused");
-                    $(this).addClass("ballfree");
-                });
-                $calledNumbersContents.children().remove();
-                bingo.newGame();
-                setTotalsInformation();
-        }
+            <!--if (confirm("Are you sure you would like to start a new game?")) {-->
+                $.colorbox({href: '#numberOfWinnersDiv',
+                inline: true,
+                overlayClose: false,
+                escKey: false});
+                <!--$numberOfWinnersDiv.show();-->
+
+
+            <!--}-->
             return false;
         });
+
+        $('#numberOfWinnersNewGame').click(function(e) {
+            e.preventDefault();
+
+            addWinners(numberOfWinners);
+            startNewGame();
+            $.colorbox.close();
+
+            return false;
+        });
+
+
+        $('#numberOfWinnersSameCard').click(function(e) {
+            e.preventDefault();
+
+            addWinners(numberOfWinners);
+            $.colorbox.close();
+
+            return false;
+        });
+
+        $('#numberOfWinnersCancel').click(function(e) {
+            e.preventDefault();
+            $.colorbox.close();
+            $numberOfWinners.val(1);
+            return false;
+        });
+
+        function startNewGame() {
+            $(".ballused").each(function(index, value) {
+            $(this).removeClass("ballused");
+            $(this).addClass("ballfree");
+            });
+            $calledNumbersContents.children().remove();
+            bingo.newGame();
+            setTotalsInformation();
+        }
+
+        function addWinners(numberOfWinners) {
+            var numberOfWinners = Math.max(1, $numberOfWinners.val());
+            bingo.increaseWinners(numberOfWinners);
+            setTotalsInformation();
+            $numberOfWinners.val(1);
+        }
     });
     </script>
 </head>
@@ -98,7 +167,7 @@
         <div id="actiondiv">
             <button id="callBall" type="button">Draw next ball</button>
 
-            <button id="newGame" type="button">Begin new game</button>
+            <button id="newGame" type="button">We have a Bingo</button>
         </div>
     </div>
 
@@ -108,12 +177,24 @@
         </div>
     </div>
 
-    <div id="selectedBallDiv" style="display:none">
-        <div id="selectedBallContents">
-            <div id="selectedBall" class="ballused"></div>
+
+    <div style="display:none;">
+        <div id="selectedBallDiv">
+            <div class="selectedBallContents">
+                <div id="selectedBall" class="ballused"></div>
+            </div>
+        </div>
+
+        <div id="numberOfWinnersDiv">
+            <span>Number of winners: </span><input id="numberOfWinners" type="number" value="1" min="1"/>
+            <div id="numberOfWinnersButtons">
+                <button id="numberOfWinnersSameCard" type="button">Continue Same Game</button>
+                <button id="numberOfWinnersNewGame" type="button">Start New Game</button>
+                <div>
+                    <button id="numberOfWinnersCancel" type="button">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
-
-
 </body>
 </html>
